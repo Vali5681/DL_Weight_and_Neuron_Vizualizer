@@ -1,5 +1,8 @@
 # DL Weight & Neuron Visualizer
 
+<img width="1689" height="898" alt="image" src="https://github.com/user-attachments/assets/c6db8101-bf16-4c3d-8fb0-e4842f0540e5" />
+
+
 A lightweight, zero-dependency Deep Learning project in Python with an interactive web GUI that visualizes **weights, biases, gradients, and live weight updates ($\Delta w$)** during training.
 
 ## Features
