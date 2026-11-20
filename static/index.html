@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neural Network Weight &amp; Training Visualizer</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <h1>DL Weight &amp; Neuron Visualizer</h1>
+        <p class="subtitle">Watch weights, biases, gradients, and decision boundaries evolve live</p>
+      </div>
+    </div>
+
+    <div class="transport">
+      <button id="btnPlayPause" class="btn btn-primary">▶ Train</button>
+      <button id="btnStep1" class="btn">Step +1</button>
+      <button id="btnStep10" class="btn">Step +10</button>
+      <button id="btnReset" class="btn btn-danger">↺ Reset</button>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-pill">
+        <span class="metric-label">Epoch</span>
+        <span id="metricEpoch" class="metric-value">0</span>
+      </div>
+      <div class="metric-pill">
+        <span class="metric-label">Loss</span>
+        <span id="metricLoss" class="metric-value">—</span>
+      </div>
+      <div class="metric-pill">
+        <span class="metric-label">Accuracy</span>
+        <span id="metricAcc" class="metric-value">—</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="controls-bar">
+    <label class="ctrl">
+      <span>Dataset</span>
+      <select id="selDataset">
+        <option value="xor">XOR</option>
+        <option value="circle">Circle</option>
+        <option value="moons">Two Moons</option>
+        <option value="spiral">Spiral</option>
+      </select>
+    </label>
+
+    <label class="ctrl">
+      <span>Hidden Layers</span>
+      <select id="selArch">
+        <option value="3">[3]</option>
+        <option value="4,4" selected>[4, 4]</option>
+        <option value="6,4">[6, 4]</option>
+        <option value="6,6,4">[6, 6, 4]</option>
+      </select>
+    </label>
+
+    <label class="ctrl">
+      <span>Activation</span>
+      <select id="selActivation">
+        <option value="tanh" selected>Tanh</option>
+        <option value="relu">ReLU</option>
+        <option value="sigmoid">Sigmoid</option>
+      </select>
+    </label>
+
+    <label class="ctrl">
+      <span>Optimizer</span>
+      <select id="selOptimizer">
+        <option value="adam" selected>Adam</option>
+        <option value="sgd">SGD</option>
+      </select>
+    </label>
+
+    <label class="ctrl ctrl-wide">
+      <span>Learning Rate: <strong id="lblLr">0.050</strong></span>
+      <input id="rngLr" type="range" min="0.005" max="0.3" step="0.005" value="0.05" />
+    </label>
+
+    <label class="ctrl">
+      <span>Speed</span>
+      <select id="selSpeed">
+        <option value="slow">Slow (1 ep / 450ms)</option>
+        <option value="medium" selected>Medium (2 ep / 120ms)</option>
+        <option value="fast">Fast (5 ep / 50ms)</option>
+      </select>
+    </label>
+
+    <div class="toggles">
+      <label class="toggle">
+        <input id="chkLabels" type="checkbox" checked />
+        <span>Weight Labels</span>
+      </label>
+      <label class="toggle">
+        <input id="chkDelta" type="checkbox" checked />
+        <span>Highlight Δw</span>
+      </label>
+    </div>
+  </section>
+
+  <main class="workspace">
+    <section class="panel panel-network">
+      <div class="panel-header">
+        <h2>Network Graph (Weights &amp; Neurons)</h2>
+        <div class="legend">
+          <span class="leg-item"><i class="swatch pos"></i> w &gt; 0</span>
+          <span class="leg-item"><i class="swatch neg"></i> w &lt; 0</span>
+          <span class="leg-item"><i class="swatch delta"></i> |Δw| update</span>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="networkCanvas"></canvas>
+      </div>
+      <p class="hint">Click any weight edge or neuron to inspect its exact value, gradient, and latest Δw update.</p>
+    </section>
+
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Decision Boundary</h2>
+          <span class="badge">[-1.5, 1.5]²</span>
+        </div>
+        <div class="boundary-wrap">
+          <canvas id="boundaryCanvas" width="280" height="280"></canvas>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Training Loss &amp; Accuracy</h2>
+        </div>
+        <canvas id="lossCanvas" width="320" height="140"></canvas>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Inspector &amp; Live Δw</h2>
+        </div>
+        <div id="inspectorBody" class="inspector-body">
+          <p class="muted">Click a neuron or weight edge in the graph to inspect it.</p>
+        </div>
+        <div class="top-updates">
+          <h3>Largest Weight Updates (|Δw|)</h3>
+          <table class="updates-table">
+            <thead>
+              <tr>
+                <th>Edge</th>
+                <th>w</th>
+                <th>∂L/∂w</th>
+                <th>Δw</th>
+              </tr>
+            </thead>
+            <tbody id="updatesTbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
